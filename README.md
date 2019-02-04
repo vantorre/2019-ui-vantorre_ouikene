@@ -208,4 +208,4 @@ let twenty = multiply2(5) |> multiply2; /* same as multiply2(multiply2(5))*/
 let _ = (twenty |> string_of_int) |> print_endline /* same as print_endline(string_of_int(twenty)) */
 ```
 
-After this overview we will start our first projet [Tennis Kata](./TENNIS.MD)
+After this overview we will start our first projet [Tennis Kata](./TENNIS.md)

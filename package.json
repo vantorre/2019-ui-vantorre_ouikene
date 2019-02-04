@@ -9,7 +9,7 @@
     "build": "bsb -make-world",
     "watch": "concurrently -k -n bsb,jest -c magenta,green \"bsb -make-world -w\" \"jest --watch\"",
     "byte": "bsb -backend",
-    "test": "jest --coverage"
+    "test": "npm run build && jest --coverage"
   },
   "repository": {
     "type": "git",

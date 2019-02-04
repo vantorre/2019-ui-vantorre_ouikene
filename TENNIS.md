@@ -351,7 +351,7 @@ Now the test pass ! (•̀ᴗ•́)و
 Add a test for the third property :
 
 ```OCaml
-  test("Given player: 40 | other < 30 when other wins then score is Deuce", () => {
+  test("Given player: 40 | other 0 when other wins then score is 40/15", () => {
     let fortyLove = {player: PlayerOne, otherPlayerPoint: Love};
     let fortyFifteen = {player: PlayerOne, otherPlayerPoint: Fifteen};
     expect(scoreWhenForty(fortyLove, other(fortyLove.player)))
