@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/tennis.bs.js",
+    "start": "node ./server",
     "clean": "bsb -clean-world",
-    "build": "bsb -make-world",
-    "watch": "concurrently -k -n bsb,jest -c magenta,green \"bsb -make-world -w\" \"jest --watch\"",
+    "build": "bsb -make-world && parcel build index.html",
+    "watch": "concurrently -k -n bsb,jest -c magenta,green,blue \"bsb -make-world -w\" \"jest --watch\" \"parcel watch index.html\"",
     "byte": "bsb -backend",
-    "test": "npm run build && jest --coverage"
+    "test": "npm run build && jest --coverage",
+    "parcel": "parcel index.html"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,16 @@
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.7",
     "bs-platform": "^4.0.18",
-    "concurrently": "^4.1.0"
+    "bsb-js": "^1.1.7",
+    "concurrently": "^4.1.0",
+    "parcel-bundler": "^1.11.0"
+  },
+  "dependencies": {
+    "compression": "^1.7.3",
+    "express": "^4.16.4",
+    "helmet": "^3.15.0",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "reason-react": "^0.5.3"
   }
 }

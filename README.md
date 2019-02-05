@@ -1,5 +1,13 @@
 # Age of Reason
 
+## TL;DR;
+
+If you came back here, you should have a working tennis [module](https://reasonml.github.io/docs/en/module) (in ReasonML meanings) otherwise you have now a working implementation on this repository. Use it or merge yours after cloning this repository
+
+During the next training we will build a [UI](./UI.md)
+
+## Introduction
+
 We defined code easy to reason about as :
 
 - Does not affect or mutate external state (ie : no side effects)

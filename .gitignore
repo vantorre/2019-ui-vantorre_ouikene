@@ -6,3 +6,4 @@ coverage
 .bsb.lock
 dist
 *.bs.js
+.cache
