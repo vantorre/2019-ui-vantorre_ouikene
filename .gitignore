@@ -7,3 +7,5 @@ coverage
 dist
 *.bs.js
 .cache
+
+.idea/
