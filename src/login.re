@@ -18,8 +18,8 @@ let make = _children => {
   initialState: () => {login: "", password: ""},
   reducer: (action, state) =>
     switch (action) {
-    | Signin => ReasonReact.Update({login: state.login, password: state.password})
-    | Signup => ReasonReact.Update({login: state.login, password: state.password})
+    | Signin => ReasonReact.SideEffects(_ => ReasonReact.Router.push("score"))
+    | Signup => ReasonReact.SideEffects(_ => ReasonReact.Router.push("score"))
     | Login(login) => ReasonReact.Update({login, password: state.password})
     | Password(password) => ReasonReact.Update({login: state.login, password})
     },
