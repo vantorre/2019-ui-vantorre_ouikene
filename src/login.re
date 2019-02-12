@@ -13,37 +13,40 @@ type state = {
 
 let component = ReasonReact.reducerComponent("Login");
 
-let postExecute = (url: string, body, callback) =>
-  Js.Promise.(
-    Fetch.fetchWithInit(
-      url,
-      Fetch.RequestInit.make(
-        ~method_=Post,
-        ~body=Fetch.BodyInit.make(Js.Json.stringify(body)),
-        ~headers=
-          Fetch.HeadersInit.make({
-            "mode": "cors",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          }),
-        (),
-      ),
-    )
-    |> then_(Fetch.Response.json)
-    |> then_(value =>
-         Json.Decode.{"success": value |> field("success", bool), "message": value |> field("message", string)}
-         |> (
-           response => {
-             switch (response##success) {
-             | false => Js.Promise.resolve(response)
-             | _ =>
-               callback();
-               Js.Promise.resolve(response);
-             };
-           }
+let postExecute = (url: string, body, callback) => {
+  let promise =
+    Js.Promise.(
+      Fetch.fetchWithInit(
+        url,
+        Fetch.RequestInit.make(
+          ~method_=Post,
+          ~body=Fetch.BodyInit.make(Js.Json.stringify(body)),
+          ~headers=
+            Fetch.HeadersInit.make({
+              "mode": "cors",
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            }),
+          (),
+        ),
+      )
+      |> then_(Fetch.Response.json)
+      |> then_(value =>
+           Json.Decode.{"success": value |> field("success", bool), "message": value |> field("message", string)}
+           |> (
+             response => {
+               switch (response##success) {
+               | false => Js.Promise.resolve(response)
+               | _ =>
+                 callback();
+                 Js.Promise.resolve(response);
+               };
+             }
+           )
          )
-       )
-  );
+    );
+  ();
+};
 
 let signup = state => {
   ReasonReact.Router.push("/score") |> ignore;
