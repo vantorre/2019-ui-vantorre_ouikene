@@ -33,9 +33,9 @@ let postExecute = (url: string, body) =>
     |> then_(value => Js.log(value) |> resolve)
   );
 
-let signin = state => {
-  postExecute("https://app-d6af5d0c-6efd-46de-ada6-719b9210357b.cleverapps.io/users/login", state);
-  ReasonReact.SideEffects(_ => ReasonReact.Router.push("score"));
+let signup = state => {
+  Js.log("fuck") |> ignore;
+  ReasonReact.Router.push("/score") |> ignore;
 };
 
 let make = _children => {
@@ -43,8 +43,13 @@ let make = _children => {
   initialState: () => {login: "", password: ""},
   reducer: (action, state) =>
     switch (action) {
-    | Signin => signin(state)
-    | Signup => ReasonReact.SideEffects(_ => ReasonReact.Router.push("/login"))
+    | Signin =>
+      postExecute(
+        "https://app-d6af5d0c-6efd-46de-ada6-719b9210357b.cleverapps.io/users/login",
+        encodeToJson(state.login, state.password),
+      );
+      ReasonReact.SideEffects(_ => ReasonReact.Router.push("/score"));
+    | Signup => ReasonReact.SideEffects(_self => Js.log("hello!"))
     | Login(login) => ReasonReact.Update({login, password: state.password})
     | Password(password) => ReasonReact.Update({login: state.login, password})
     },
