@@ -65,7 +65,7 @@ let make = _children => {
           if (state.login != "" && state.password != "") {
             postExecute(
               "https://app-d6af5d0c-6efd-46de-ada6-719b9210357b.cleverapps.io/users/login",
-              Json.Encode.(object_([("login", string(state.login)), ("password", string(state.password))])),
+              Json.Encode.(object_([("email", string(state.login)), ("password", string(state.password))])),
               () =>
               ReasonReact.Router.push("score")
             );
@@ -75,7 +75,20 @@ let make = _children => {
           },
       )
     | Signup =>
-      ReasonReact.Router.push("login");
+      ReasonReact.SideEffects(
+        _self =>
+          if (state.login != "" && state.password != "") {
+            postExecute(
+              "https://app-d6af5d0c-6efd-46de-ada6-719b9210357b.cleverapps.io/user/sub",
+              Json.Encode.(object_([("email", string(state.login)), ("password", string(state.password))])),
+              () =>
+              ReasonReact.Router.push("score")
+            );
+          } else {
+            ReasonReact.NoUpdate;
+            ReasonReact.Router.push("login");
+          },
+      );
       ReasonReact.NoUpdate;
     },
   render: self =>
