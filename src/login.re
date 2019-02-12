@@ -29,10 +29,8 @@ let postExecute = (url: string, body) =>
         (),
       ),
     )
-    |> then_(value => {
-         Js.log(value);
-         Js.Promise.resolve(value);
-       })
+    |> then_(Fetch.Response.text)
+    |> then_(value => Js.log(value) |> resolve)
   );
 
 let signin = state => {
@@ -46,7 +44,7 @@ let make = _children => {
   reducer: (action, state) =>
     switch (action) {
     | Signin => signin(state)
-    | Signup => ReasonReact.SideEffects(_ => ReasonReact.Router.push(Signup))
+    | Signup => ReasonReact.SideEffects(_ => ReasonReact.Router.push("/login"))
     | Login(login) => ReasonReact.Update({login, password: state.password})
     | Password(password) => ReasonReact.Update({login: state.login, password})
     },
