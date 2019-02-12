@@ -13,7 +13,7 @@ type state = {
 
 let component = ReasonReact.reducerComponent("Login");
 
-let postExecute = (url: string, body) =>
+let postExecute = (url: string, body, callback) =>
   Js.Promise.(
     Fetch.fetchWithInit(
       url,
@@ -29,12 +29,23 @@ let postExecute = (url: string, body) =>
         (),
       ),
     )
-    |> then_(Fetch.Response.text)
-    |> then_(value => Js.log(value) |> resolve)
+    |> then_(Fetch.Response.json)
+    |> then_(value =>
+         Json.Decode.{"success": value |> field("success", bool), "message": value |> field("message", string)}
+         |> (
+           response => {
+             switch (response##success) {
+             | false => Js.Promise.resolve(response)
+             | _ =>
+               callback();
+               Js.Promise.resolve(response);
+             };
+           }
+         )
+       )
   );
 
 let signup = state => {
-  Js.log("fuck") |> ignore;
   ReasonReact.Router.push("/score") |> ignore;
 };
 
@@ -43,15 +54,26 @@ let make = _children => {
   initialState: () => {login: "", password: ""},
   reducer: (action, state) =>
     switch (action) {
-    | Signin =>
-      postExecute(
-        "https://app-d6af5d0c-6efd-46de-ada6-719b9210357b.cleverapps.io/users/login",
-        encodeToJson(state.login, state.password),
-      );
-      ReasonReact.SideEffects(_ => ReasonReact.Router.push("/score"));
-    | Signup => ReasonReact.SideEffects(_self => Js.log("hello!"))
     | Login(login) => ReasonReact.Update({login, password: state.password})
     | Password(password) => ReasonReact.Update({login: state.login, password})
+    | Signin =>
+      ReasonReact.SideEffects(
+        _self =>
+          if (state.login != "" && state.password != "") {
+            postExecute(
+              "https://app-d6af5d0c-6efd-46de-ada6-719b9210357b.cleverapps.io/users/login",
+              Json.Encode.(object_([("login", string(state.login)), ("password", string(state.password))])),
+              () =>
+              ReasonReact.Router.push("score")
+            );
+          } else {
+            ReasonReact.NoUpdate;
+            Js.log("Authentication Error");
+          },
+      )
+    | Signup =>
+      ReasonReact.Router.push("login");
+      ReasonReact.NoUpdate;
     },
   render: self =>
     <div>
